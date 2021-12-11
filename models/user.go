@@ -65,3 +65,15 @@ func UserExists(username string) bool {
 	}
 	return false
 }
+
+func IsUserValid(username, password string) bool {
+	db := utils.GetDB()
+	sqlQuery := "SELECT * FROM users WHERE username = $1 AND password = $2"
+	var user User
+	row := db.QueryRow(sqlQuery, username, password)
+	err := row.Scan(&user.Id, &user.Username, &user.Password)
+	if err == nil {
+		return true
+	}
+	return false
+}
