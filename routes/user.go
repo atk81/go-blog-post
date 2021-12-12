@@ -8,12 +8,12 @@ import (
 func UserRegister(router *gin.Engine) {
 	userRoutes := router.Group("/u")
 	{
-		userRoutes.GET("/register", controllers.ShowRegistrationPage)
+		userRoutes.GET("/register", controllers.EnsureNotLoggedIn(), controllers.ShowRegistrationPage)
 
-		userRoutes.POST("/register", controllers.Register)
+		userRoutes.POST("/register", controllers.EnsureNotLoggedIn(), controllers.Register)
 
-		userRoutes.GET("/login", controllers.ShowLoginPage)
-		userRoutes.POST("/login", controllers.PerformLogin)
-		userRoutes.GET("/logout", controllers.Logout)
+		userRoutes.GET("/login", controllers.EnsureNotLoggedIn(), controllers.ShowLoginPage)
+		userRoutes.POST("/login", controllers.EnsureNotLoggedIn(), controllers.PerformLogin)
+		userRoutes.GET("/logout", controllers.EnsureLoggedIn(), controllers.Logout)
 	}
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func GetArticle(c *gin.Context) {
-	article_id,_ := uuid.Parse(c.Param("article_id"))
+	article_id, _ := uuid.Parse(c.Param("article_id"))
 	Article, err := models.GetArticle(article_id)
 	if err != nil {
 		log.Fatalf("An error ocurred %v", err)
@@ -25,6 +25,7 @@ func GetArticle(c *gin.Context) {
 		gin.H{
 			"title":   Article.Title,
 			"payload": Article,
+			"is_logged_in": c.GetBool("is_logged_in"),
 		},
 	)
 }
@@ -38,6 +39,7 @@ func ShowArticleCreationPage(c *gin.Context) {
 		// Pass the data that the page uses
 		gin.H{
 			"title": "Create article",
+			"is_logged_in": c.GetBool("is_logged_in"),
 		},
 	)
 }

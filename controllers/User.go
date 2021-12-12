@@ -23,6 +23,7 @@ func ShowRegistrationPage(c *gin.Context) {
 		// Pass the data that the page uses
 		gin.H{
 			"title": "Register",
+			"is_logged_in": c.GetBool("is_logged_in"),
 		},
 	)
 }
@@ -39,14 +40,15 @@ func Register(c *gin.Context) {
 			"login-successful.html",
 			gin.H{
 				"title": "Login successful",
+			"is_logged_in": c.GetBool("is_logged_in"),
 			},
 		)
-	} else{
+	} else {
 		// If the username/password combination is invalid,
-        // show the error message on the login page
-        c.HTML(http.StatusBadRequest, "register.html", gin.H{
-            "ErrorTitle":   "Registration Failed",
-            "ErrorMessage": err.Error()})
+		// show the error message on the login page
+		c.HTML(http.StatusBadRequest, "register.html", gin.H{
+			"ErrorTitle":   "Registration Failed",
+			"ErrorMessage": err.Error()})
 
 	}
 }
@@ -60,35 +62,39 @@ func ShowLoginPage(c *gin.Context) {
 		// Pass the data that the page uses
 		gin.H{
 			"title": "Log In",
+			"is_logged_in": c.GetBool("is_logged_in"),
 		},
 	)
 }
 
 func PerformLogin(c *gin.Context) {
-    username := c.PostForm("username")
-    password := c.PostForm("password")
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 
-    if model.IsUserValid(username, password) {
-        token := generateSessionToken()
-        c.SetCookie("token", token, 3600, "", "", false, true)
+	if model.IsUserValid(username, password) {
+		token := generateSessionToken()
+		c.SetCookie("token", token, 3600, "", "", false, true)
+		c.Set("is_logged_in", true)
 
 		c.HTML(
 			http.StatusOK,
 			"login-successful.html",
 			gin.H{
-				"title": "Login successful",
+				"title":        "Login successful",
+				"is_logged_in": c.GetBool("is_logged_in"),
 			},
 		)
+		// c.Redirect(http.StatusOK, "/")
 
-    } else {
-        c.HTML(http.StatusBadRequest, "login.html", gin.H{
-            "ErrorTitle":   "Login Failed",
-            "ErrorMessage": "Invalid credentials provided"})
-    }
+	} else {
+		c.HTML(http.StatusBadRequest, "login.html", gin.H{
+			"ErrorTitle":   "Login Failed",
+			"ErrorMessage": "Invalid credentials provided"})
+	}
 }
 
 func Logout(c *gin.Context) {
-    c.SetCookie("token", "", -1, "", "", false, true)
+	c.SetCookie("token", "", -1, "", "", false, true)
 
-    c.Redirect(http.StatusTemporaryRedirect, "/")
+	c.Redirect(http.StatusTemporaryRedirect, "/")
 }

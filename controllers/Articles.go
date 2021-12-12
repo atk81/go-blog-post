@@ -24,6 +24,7 @@ func ShowIndexPage(c *gin.Context) {
 		gin.H{
 			"title":   "Home Page",
 			"payload": Articles,
+			"is_logged_in": c.GetBool("is_logged_in"),
 		},
 	)
 }

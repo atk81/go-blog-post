@@ -11,8 +11,8 @@ func ArticleRegister(router *gin.Engine){
         // route from Part 1 of the tutorial
         articleRoutes.GET("/view/:article_id", controllers.GetArticle)
 
-        articleRoutes.GET("/create", controllers.ShowArticleCreationPage)
+        articleRoutes.GET("/create", controllers.EnsureLoggedIn(), controllers.ShowArticleCreationPage)
 
-        articleRoutes.POST("/create", controllers.CreateArticle)
+        articleRoutes.POST("/create", controllers.EnsureLoggedIn(), controllers.CreateArticle)
     }
 }
