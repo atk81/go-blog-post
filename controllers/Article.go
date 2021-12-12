@@ -28,3 +28,27 @@ func GetArticle(c *gin.Context) {
 		},
 	)
 }
+
+func ShowArticleCreationPage(c *gin.Context) {
+	c.HTML(
+		// Set the HTTP status to 200 (OK)
+		http.StatusOK,
+		// Use the article.html template
+		"create-article.html",
+		// Pass the data that the page uses
+		gin.H{
+			"title": "Create article",
+		},
+	)
+}
+
+func CreateArticle(c *gin.Context) {
+	title := c.PostForm("title")
+	content := c.PostForm("content")
+
+	if id, err := models.CreateArticle(title, content); err != nil {
+		log.Fatalf("An error ocurred %v", err)
+	} else {
+		c.Redirect(http.StatusMovedPermanently, "/article/view/"+id.String())
+	}
+}

@@ -6,5 +6,13 @@ import (
 )
 
 func ArticleRegister(router *gin.Engine){
-	router.GET("/article/view/:article_id",controllers.GetArticle)
+	articleRoutes := router.Group("/article")
+    {
+        // route from Part 1 of the tutorial
+        articleRoutes.GET("/view/:article_id", controllers.GetArticle)
+
+        articleRoutes.GET("/create", controllers.ShowArticleCreationPage)
+
+        articleRoutes.POST("/create", controllers.CreateArticle)
+    }
 }

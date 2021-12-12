@@ -13,7 +13,7 @@ type Article struct {
 	Content string `json:"content"`
 }
 
-func AddArticle(title string, content string) (uuid.UUID, error) {
+func CreateArticle(title string, content string) (uuid.UUID, error) {
 	db := utils.GetDB()
 	sqlQuery := `INSERT INTO ARTICLES(Title, Content) VALUES($1, $2) RETURNING ID`
 	var id uuid.UUID
